@@ -1,4 +1,4 @@
-//Bibliotecas 
+//Bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,331 +12,439 @@ struct funcionario{
 };
 
 //Estrutura cadastro de cliente
-struct cliente{
-    char client[100];
-    int cli_cpf[100], cli_tele[100];
-    float mensa[100];
+typedef struct{
+    char client[20];
+    char cli_tele[20];
+    char cli_cpf[50];
+    float cli_mensa;
+}clientes;
+
+
+clientes clientesvet[5];
+
+//PROTOTIPACÃO
+void mascara(char *cli_tele, char formato[]);
+
+clientes lercliente(){
+    clientes cl;{
+        int i,p,d1,d2,s,t,u = 0;
+        char confi[1];
+        char sim[1] = "s";
+                printf("\n********************************\n");
+                printf("\nDigite o nome do cliente: ");
+                scanf("%s", &cl.client);
+                do{
+                printf("\nDigite o CPF do cliente: ");
+                scanf("%d",&cl.cli_cpf);
+                scanf("%*c");
+                for(i=1; i<9; i++){
+                    p+=cl.cli_cpf[i]*(11-i);
+                }
+                d1=p%11;
+                if(d1 < 2){
+                    d1=0;
+                }
+                else{
+                    d1 = 11 - d1;
+                }p = 0;
+
+                for(i=1;i<9;i++){
+                p+=cl.cli_cpf[i]*(12-i);
+                }
+                d2=(p+(d1*2))%11;
+                if(d2<2){
+                    d2=0;
+                }
+                else{
+                    d2=d2-11;
+                }
+                s = 1;
+                if(cl.cli_cpf[10]==d1&&cl.cli_cpf[11]==d2){
+                    s = 0;
+                }
+                else{
+                    printf("\n******CPF_Invalido*****\n");
+                    printf("***********************\n");
+                }
+                }while(s != 0);
+                printf("\nDigite o telefone do cliente: ");
+                scanf("%s", &cl.cli_tele);
+                mascara(cl.cli_tele,"(**)****-*****");
+                printf("\n");
+                printf("\nDigite o valor da mensalidade: ");
+                scanf("%f", &cl.cli_mensa);
+                printf("\n********************************\n\n");
+            }
+
+    return cl;
 };
-//Estrutura cadastro de produto
-typedef struct {
-    int cod[50];
-    char nome[50];
-    char categoria[50];
-    float valor[50];
+
+void mascara(char *cli_tele, char formato[]){
+     char aux[100];
+     int i = 0;
+
+     while(*cli_tele)
+     {
+        if(formato[i] != '*')
+        {
+           aux[i] = formato[i];
+           i++;
+        }
+        else
+        {
+           aux[i] = *cli_tele;
+           cli_tele++;
+           i++;
+        }
+     }
+     aux[i] = 0;
+
+     printf("\t%s",aux);
+     getchar();
+}
+
+void exibircliente(clientes elt){
+      printf("\tNome: %s", elt.client);
+      printf("\tMensalidade: R$%.2f\n\n", elt.cli_mensa);
+
+};
+
+int tam = 5;
+
+void imprimicliente(){
+int i;
+for(i = 0; i < tam; i++)
+    printf("\nNome: %d\tTelefone: %s, CPF: %s, Mensalidade: %f", clientesvet[i].client, clientesvet[i].cli_tele, clientesvet[i].cli_cpf, clientesvet[i].cli_mensa);
+};
+
+void imprimirclienteconsulta(clientes e){
+    printf("\nNome: %d\n", e.client);
+    printf("\tTelefone: %i", e.cli_tele);
+    printf("\tCPF: %s", e.cli_cpf);
+    printf("\tMensalidade: R$%.2f\n", e.cli_mensa);
+};
+
+
+//Nosso registro para armazenar um tipo chamado produto
+typedef struct{
+      int codigo;
+      char nome[50];
+      char marca[50];
+      float valor;
+      int quantidade;
 } produto;
+//vetor global do tipo produto
+
+produto estoque[5];
 
 
- //Relatório de vendas, caixas, fluxo de funcionarios e clientes
- void relEstoque(produto produto){
-    int cont1;
-    printf(" Código      Nome        Categória   Valor \n");
-    for (cont1 = 0; cont1 = 50; cont1++){
-        printf("\n%d", produto.cod[cont1]);
-        printf("%c", produto.nome[cont1]);
-        printf("%c", produto.categoria[cont1]);
-        printf("\n%.2f", produto.valor[cont1]);
-    }
- };
+//função que lê um produto do teclado e retorna para quem chamou
+produto lerproduto(){
+      produto el;
+      printf("\nDigite o codigo: ");
+      scanf("%d", &el.codigo);
+      scanf("%*c");
+      printf("\nDigite o nome: ");
+      fgets(el.nome, 49, stdin);
+      printf("Digite a marca: ");
+      fgets(el.marca, 49, stdin);
+      printf("Valor: ");
+      scanf("%f", &el.valor);
+      printf("Digite a quantidade: ");
+      scanf("%d", &el.quantidade);
+      return el;//retorno do produto preenchido para quem chamou
+};
 
- void relVendas(){
+//procedimento para imprimir um produto na tela
+void exibir(produto elt){
+      printf("\n\tCodigo: %d\n", elt.codigo);
+      printf("\tNome: %s", elt.nome);
+      printf("\tMarca: %s", elt.marca);
+      printf("\tValor R$%.2f\n", elt.valor);
+      printf("\tQuantidade: %d\n\n", elt.quantidade);
+};
 
- };
+void imprimiCodigoNome(){
+int i;
+for(i = 0; i < tam; i++)
+    printf("\nCodigo: %d\tNome: %s", estoque[i].codigo, estoque[i].nome);
+};
 
- void relCaixas(){
+void imprimirproduto(produto e){
+    printf("\nCodigo: %d\n", e.codigo);
+    printf("\tNome: %s", e.nome);
+    printf("\tMarca: %s", e.marca);
+    printf("\tValor: R$%.2f\n", e.valor);
+    printf("\tQuantidade: %d\n\n", e.quantidade);
+};
 
- };
+//função que tenta realizar uma venda
+//retorna 1 se conseguiu vender (se há estoque disponível)
+//retorna 0 se não conseguir vender (quantidade igual a zero)
+//a venda subtrai 1 da quantidade disponível
+struct{
+int au1, au2, venda;
+float valorpacial, valortotal;
+} relvenda;
 
- void relFluxo(){
+void vender(){
+        int cod, i;
+        imprimiCodigoNome();// imprime na tela código e nome de todos os produtos
+        printf("Qual_o_codigo_do_produto?: ");
+        scanf("%d", &cod);
+        for(i = 0; i < tam; i++) {//procura o item a ser vendido pelo código
+                if(cod == estoque[i].codigo) {
+                         if(estoque[i].quantidade > 0){//verifica se está disponível no estoque
+                                estoque[i].quantidade--;
+                                relvenda.valorpacial = estoque[i].quantidade * estoque[i].valor;
+                                relvenda.venda = relvenda.venda + 1;
+                                relvenda.au1 = relvenda.venda;
+                                relvenda.valortotal += relvenda.valorpacial;
+                                printf("\n*****Venda_realizada_com_sucesso!!!*****\n");
+                        }else{
+                             printf("\n*****Nao_foi_possivel_realizar_a_venda._Verifique_seu_estoque*****\n");
+                        }
+                }
+        }
+};
 
- };
 
+int atualizarEstoque(){
+        int cod, i, qt;
+        imprimiCodigoNome();//imprime na tela código e nome de todos os eletrônicos
+        printf("Qual_o_codigo_do_produto?: ");
+        scanf("%d", &cod);
+        for(i = 0; i < tam; i++) {//procura o item a ser atualizado pelo código
+                if(cod == estoque[i].codigo) {
+                            printf("nQual_a_quantidade? ");//pede ao usuário a quantidade a ser adicionada
+                            scanf("%d", &qt);
+                            estoque[i].quantidade += qt;// atualiza a quantidade em estoque
+                            return 1;//atualização efetuada com sucesso
+                }
+            }
+            return 0;// não foi possível efetuar a atualização
+};
 
- // Funções
-
- // *** Vendas ****
-
-// Suplemento, vestuarios, coqueteleira, bebidas, equipamento
- void venderProduto(int codigo){ 
-    produto produtoVendido;
- };
-
-//Programa principal
 void main(){
-
-    //Formatação pra português
+    //Formatação para português
     setlocale(LC_ALL, "Portuguese");
 
-    //Variáveis
-    int aumensa, valormensa, clientcad1, clientcad2, codigo, 
-    au, au2, au3, esto[10][10], lin, col, cont1, cont2, cont3, 
-    cont4, cont5, op, op2, op3, op4, op5, cli, esta, qnt_prod, esto1, esto2, qntCadastrarProd = 0;
+   //Variáveis
+    int aumensa, i, valormensa,
+    au, au2, au3, cont1, cont2, cont3,
+    cont4, cont5, op, op2, op3, op4, op5, cli, esta;
     float caixa, soma;
-    char login[20], senha[8];
 
-    produto produtosVendidos[50];
-    produto produtosCadastrados[50];
-    produto produto;
+    //variaveis para o login
+    char login[15] = "adm";
+    char login1[15];
+    char senha[15] = "123";
+    char senha1[15];
+    int login_efetuado = 0; //0 - Falso e  1 - Verdadeiro
 
     //Tela de login
     printf("\n********LOGIN********\n");
-    printf("\nDigite seu login: ");
-    scanf("%s", &login);
-    printf("\nDigite sua senha: ");
-    scanf("%s", &senha);
+      while(!login_efetuado){
+        printf("Digite o Login: ");
+        scanf("%s", &login1);
+
+        printf("Digite a Senha: ");
+        scanf("%s", &senha1);
+
+        if (strcmp(login, login1) == 0 && strcmp(senha, senha1) == 0){
+            printf("\n\n****LOGADO!****\n\n");
+            login_efetuado = 1;
+        }
+        else
+            printf("\n\n****DADOS_INVALIDOS!****\n\n");
+    }
     printf("\n**********************\n");
 
     //Menu principal
     do{
-        printf("\n****MENU_PRINCIPAL_CADASTRO****\n");
-        printf("[1] Cadastrar funcionário\n");
-        printf("[2] Cadastrar cliente\n");
-        printf("[3] Cadastrar produto\n");
-        printf("[4] Menu de alteração de dados\n");
-        printf("[5] Menu de consultas \n");
-        printf("[6] Menu do gerente\n");
-        printf("[0] Sair \n");
-        printf("\nEscolha uma opção: ");
+        printf("\n****MENU_PRINCIPAL****\n");
+        printf("\n-----Cadastro-----");
+        printf("\n[1] Cadastrar_funcionario");
+        printf("\n[2] Cadastrar_cliente");
+        printf("\n[3] Cadastrar_produto");
+        printf("\n\n-----Altercao/Consultas-----");
+        printf("\n[4] Menu_de_alteracao_de_dados");
+        printf("\n[5] Menu_de_consultas");
+        printf("\n\n-----Gerencia-----");
+        printf("\n[6] Menu_do_gerente");
+        printf("\n\n-----Vendas-----");
+        printf("\n[7] Vender_produtos");
+        printf("\n\n------------------");
+        printf("\n[0] Sair \n");
+        printf("\nEscolha_uma_opcao: ");
         scanf("%d", &op);
         printf("\n********************************\n\n");
-
-    //Seleção de funções do menu principal 
+     //Seleção de funções do menu principal
      switch(op){
         //Função de cadastro de funcionario
         case 1:
             for (cont5 = 0; cont5 < 1; cont5++){
                 struct funcionario fcad;
             printf("\n********************************\n\n");
-                printf("\nDigite o nome do funcionario: ");
+                printf("\nDigite_o_nome_do_funcionario: ");
                 scanf("%s", &fcad.fun[cont5]);
-                printf("\nDigite o CPF do funcionario: ");
+                printf("\nDigite_o_CPF_do_funcionario: ");
                 scanf("%i", &fcad.cpf[cont5]);
-                printf("\nDigite o telefone do funcionario: ");
+                printf("\nDigite_o_telefone_do_funcionario: ");
                 scanf("%i", &fcad.tele[cont5]);
                printf("\n********************************\n\n");
                }
                 break;
 
-        //refazer
-        case 2: printf("\n********************************\n\n");
-                printf("Digite o quantos clientes serão cadastrados: ");
-                scanf("%d", &au2);
-                for (cont1 = 0; cont1 < au2; cont1++){
-                struct cliente fclint;
-                printf("\nDigite o nome do cliente: ");
-                scanf("%s", &fclint.client[cont1]);
-                printf("\nDigite o cpf do cliente: ");
-                scanf("%i", &fclint.cli_cpf[cont1]);
-                printf("\nDigite o telefone do cliente: ");
-                scanf("%i", &fclint.cli_tele[cont1]);
-                printf("\nDigite o valor da mensalidade: ");
-                scanf("%f", &fclint.mensa[cont1]);
-               printf("\n********************************\n\n");
-               }
-                clientcad1 = au2;
-                valormensa = cont1;
+        //Função para cadastro de clientes
+        case 2: printf("\n****VOCÊ_ESTÁ_NO_CADASTRO_DE_CLIENTES****\n\n");
+                 printf("\n********************************\n");
+                clientes cl = lercliente();
+                // preenche o vetor (clientes) pedindos os dados ao usuário
+                for(i = 0; i < tam; i++){
+                    clientesvet[i] = lercliente();
+                    }
+                printf("\n********************************\n\n");
                 break;
 
-        //Menu de cadastro de produtos 
-        case 3: printf("\n****VOCÊ_ESTÁ_NO_MENU_DE_CADASTRO_DE_PRODUTOS****\n\n");
-                    do{
-                        printf("[1] cadastrar produto\n");
+        //Menu de cadastro de produtos
+        case 3: printf("\n****VOCÊ_ESTÁ_NO_CADASTRO_DE_PRODUTOS****\n\n");
+                 printf("\n********************************\n");
+                produto el = lerproduto();
+                // preenche o vetor (estoque) pedindos os dados ao usuário
+                for(i = 0; i < tam; i++){
+                    estoque[i] = lerproduto();
+                    }
+                printf("\n********************************\n\n");
+        break;
+
+
+        //Menu de alterção de dados
+        case 4:     do{
+                        printf("\n****MENU_DE_ALTERAÇÃO_DE_DADOS****\n");
+                        printf("[1] Alterar_dados_dos_funcionários\n");
+                        printf("[2] Alterar_dados_do_Estoque\n");
                         printf("[0] sair\n");
-                        printf("\nEscolha uma opção: ");
-                        scanf("%d", &op2);
-
-                    //Seleção de funções do menu de cadastro de produtos
-                    switch(op2){
-                            //Cadastrar Produtos
-                            case 1: 
-                            printf("\n********************************\n\n");
-                            printf("\nDigite quantos produtos vão ser cadastrados: ");
-                            scanf("%d", &qntCadastrarProd);
-                            printf("\n********************************\n\n");
-                                for (cont1 = 0; cont1 < qntCadastrarProd; cont1++){
-                                    printf("Digite o código do produto: ");
-                                    scanf("%d", &produto.cod[cont1]);
-                                    printf("Digite o nome do produto: ");
-                                    scanf("%s", &produto.nome[cont1]);
-                                    printf("Digite a categoria: ");
-                                    scanf("%s", &produto.categoria[cont1]);
-                                    printf("Digite o valor: ");
-                                    scanf("%f", &produto.valor[cont1]);
-                                    printf("\n********************************\n\n");
-
-                                    produtosCadastrados[cont1] = produto;
-                                }
-                                break;
-
-                            //Saindo do menu de produtos    
-                            case 0:
-                               printf("\n********************************\n\n");
-                               printf("\nSaiu da opção de cadastro de produto.\n");
-                               printf("\n********************************\n\n");
-                                break;
-                         
-                        }
-                    }while(op2 != 0);
-                break;
-
-        //Menu de alterção de dados 
-        case 4: printf("\n****MENU_DE_ALTERAÇÃO_DE_DADOS****\n");
-                    do{
-                        printf("[1] Alterar dados dos funcionários\n");
-                        printf("[2] Alterar dados dos clientes\n");
-                        printf("[3] Alterar dados do Estoque\n");
-                        printf("[0] sair\n");
-                        printf("\nEscolha uma opção: ");
-                        printf("\n********************************\n\n");
+                        printf("\nEscolha_uma_opção: ");
                         scanf("%d", &op3);
+                        printf("\n********************************\n\n");
 
-                        //Seleção de funções do  menu de alteração dos dados 
+                        //Seleção de funções do  menu de alteração dos dados
                         switch(op3){
                             //função de alteração de dados dos funcionários
-                            case 1: printf("escolha o funário de 0 a 49: ");
+                            case 1: printf("escolha_o_funário_de_0_a_49: ");
                             scanf("%d", &au);
                             struct funcionario fcad;
-                            printf("Digite o nome do funcionário: ");
+                            printf("Digite_o_nome_do_funcionário: ");
                             scanf("%s", &fcad.fun[au]);
-                            printf("Digite o cpf do funcionário: ");
+                            printf("Digite_o_CPF_do_funcionário: ");
                             scanf("%d", &fcad.cpf[au]);
-                            printf("Digite o telefone do funcionário: ");
+                            printf("Digite_o_telefone_do_funcionário: ");
                             scanf("%d", &fcad.tele[au]);
                             break;
 
-                            //Função de alteração de dados dos clientes 
-                            case 2: printf("escolha um cliente de 0  99: ");
-                            scanf("%d", &au);
-                            struct cliente fclint;
-                            printf("Digite o nome do cliente: ");
-                            scanf("%s", &fclint.client[au]);
-                            printf("Digite o cpf do cliente: ");
-                            scanf("%d", &fclint.cli_cpf[au]);
-                            printf("Digite o telefone do cliente: ");
-                            scanf("%d", &fclint.cli_tele[au]);
+                            //Função de alteração de dados
+                           case 2: //atualizar estoque
+                            if(atualizarEstoque())
+                                printf("\nEstoque_atualizado!!!\n");
+                            else
+                                printf("\nErro_ao_atualizar_o_estoque!\n");
                             break;
 
-                            //Função de alteração de dados dos
-                            case 3: printf("\nEscolha a pratileira do estoque: \n");
-                            scanf("%d", &esto1);
-                            printf("\nEscolha a coluna do estoque: \n");
-                            scanf("%d", &esto2);
-                            for (lin = 0; lin < esto1; lin = esto1){
-                                for (col = 0; col < esto2; col = esto2){
-                                printf("Entre com o novo produto: ");
-                                scanf("%d", &esto[lin][col]);
-                                printf("Novo produto subtituido com sucesso.\n");
-                                }
-                            }
-                            break;
-
-                            case 0://Função de saida do menu de alteção
-                           printf("\n********************************\n\n");
-                            printf("\nSaiu da opção de cadastro de produto.\n");
+                            case 0://Função de saida do menu de alteração
+                           printf("\n********************************\n");
+                            printf("\nSaiu_da_opção_de_cadastro_de_produto.\n");
                             printf("\n********************************\n\n");
                             break;
 
+                            //Função default usada caso o usuario coloque uma opção invalida
+                            default: printf("\n*****Opção_invlida!.Tente_novamente.*****\n");
                         }
                     }while(op3 != 0);
                 break;
 
         //Menu de consultas
-        case 5: printf("****MENU _DE_CONSULTAS****\n");
-                    do{
-                        printf("[1] Consultar estoque\n");
-                        printf("[2] Consultar mensalidade\n");
-                        printf("[3] Consultar produtos\n");
-                        printf("[4] Consultar ficha de cadastro\n");
-                        printf("[5] Consultar horários disponíveis\n");
+        case 5:     do{
+                        printf("****MENU _DE_CONSULTAS****\n");
+                        printf("[1] Consultar_estoque\n");
+                        printf("[2] Consultar_clientes\n");
                         printf("[0] sair\n");
-                        printf("\nEscolha uma opção: ");
+                        printf("\nEscolha uma opcao: ");
                         scanf("%d", &op4);
                         printf("\n********************************\n\n");
 
                         //Seleção de funções do menu de consultas
                         switch (op4){
-                        //Função para mostrar estoque     
-                        case 1: relEstoque(produto);
-                                printf("\n*******************************\n");
-                                break;
-
-                        //Função para consultar clientes
-                        case 2: printf("Digite o número do cliente para a consulta: ");
-                                scanf("%d", &au3);
-                                struct cliente fclint;
-                                printf("aqui está a mensalidade do cliente: %f", fclint.mensa[au3]);
-                                printf("\n********************************\n\n");
+                        //Função para mostrar estoque
+                        case 1: //imprimir todos os produtos
+                                for(i = 0; i < tam; i++) {
+                                printf("\nProduto_indice %d\n", i);
+                                imprimirproduto(estoque[i]);
+                                 }
                         break;
 
-                        //Função para consultar produto
-                        case 3: printf("Digite o número do produto para consulta: ");
-                                au = 0;
-                                scanf("%d", &au);
-                                printf("aqui está o produto: %d\n\n"); 
+                        //Função para mostrar clientes
+                        case 2:
+                                for(i = 0; i < 5; i++) {
+                                printf("\nindice %d\n", i);
+                                exibircliente(clientesvet[i]);
+                                 }
                         break;
-
-                        //Função para ficha de cadastro
-                        case 4: au2 = 0;
-                                printf("Digite o número da ficha: ");
-                                scanf("%d", &au2);
-                                struct cliente fclient;
-                                printf("aqui está a ficha do cliente: -cpf: %d, -telefone: %d, -mensalidade: %.2f\n", fclient.cli_cpf[au2], fclient.cli_tele[au2], fclient.mensa[au2]);
-                        break;
-
-                        //case 5:
-                        //break;
 
                         //Saida do menu de consultas
-                        case 0: 
+                        case 0:
+                            printf("\n********************************\n");
+                            printf("Você_saiu_do_menu_de_consultas.");
                             printf("\n********************************\n\n");
-                            printf("Você saiu do menu de consultas.");
-                            printf("\n********************************\n\n");
-                        break; 
+                        break;
 
-                      }
+                        //Função default usada caso o usuario coloque uma opção invalida
+                        default: printf("\n*****Opcao_invlida!._Tente_novamente.*****\n");
+                        }
                     }while(op4 != 0);
-                    
-                break;
+                    break;
 
-        //Menu do gerente 
-        case 6: printf("****MENU_DO_GERENTE****\n");
-                do{
-                    printf("[1] Relatório do faturamento diário ou mensal\n");
-                    printf("[2] Relatório do estoque\n");
-                    printf("[3] Relatório de vendas\n");
-                    printf("[4] Relatório de caixa\n");
-                    printf("[5] Relatório de fluxo de fúncionarios e clientes\n");
+        //Menu do gerente
+        case 6:  do{
+                    printf("****MENU _DE_CONSULTAS****\n");
+                    printf("[1] Relatorio_do_faturamento_diario_ou_mensal\n");
+                    printf("[2] Relatório_de_vendas\n");
                     printf("[0] Sair \n");
-                    printf("\nEscolha uma opção: ");
+                    printf("\nEscolha uma opcao: ");
                     scanf("%d", &op5);
                     printf("\n********************************\n\n");
 
-                    //Seleção de funções do menu do gerente 
+                    //Seleção de funções do menu do gerente
                     switch(op5){
-                    //Função para o faturamento mensa/diario
+                    //Função para o faturamento mensal
                     case 1: printf("****Faturamento_mensal****\n");
-                            struct cliente mensacli;        
-                            soma = clientcad1 * mensacli.mensa[0];
-                            printf("O faturamento mensal foi de: %.2f\n", soma);
+                            printf("\nValor_total_das_vendas: R$%.2f", relvenda.valortotal);
+                            printf("\nComissao_paga_ao_Funcionario: R$%.2f\n", relvenda.valortotal * 0.05);
                             printf("\n********************************\n\n");
-                            
+
+                    break;
+                    //Função de relatorio de vendas
+                    case 2: printf("****Relatorio_vendas****\n");
+                            printf("Nesse_mes_tivemos_um_total_de: %d vendas.", relvenda.au1);
+                            printf("\n********************************\n\n");
                     break;
 
-                    //Função para checar capacidade de armazenamento 
-                    case 2: printf("****Relatório_de_estoque****\n");
-                            if (esto[lin][col] != esto[10][10]){
-                                printf("Estoque disponivel!\n");
-                                printf("\n********************************\n\n");
-                            }else{printf("Estoque cheio!\n");}
-                            printf("\n********************************\n\n");
-                            
+                    //Função default usada caso o usuario coloque uma opção invalida
+                    default: printf("\n*****Opcao_invlida!._Tente_novamente.*****\n");
                     }
-                }while (op5 != 0); 
+                }while(op5 != 0);
                 break;
+
+        case 7: // vender um produto
+             vender();
+             break;
 
         //Encerramento do programa
         case 0: printf("\n\nPrograma _encerrado.\n\n");
-                break;
-        
+             break;
+
+        //Função default usada caso o usuario coloque uma opção invalida
+        default: printf("\n*****Opcao_invlida!._Tente_novamente.*****\n");
       }
     }while(op != 0);
-}
+};
